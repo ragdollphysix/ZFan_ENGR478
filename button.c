@@ -53,6 +53,8 @@ void configure_EXTI(void){
 
 }
 
+// ['85
+
 // ISR (interrupt handler) for EXTI15_10. Interrupt handlers are initially defined in startup_stml476xx.s.
 
 // Button for manual mode, speed change
@@ -60,15 +62,25 @@ void EXTI2_IRQHandler(void) {
 	if (EXTI->PR1 & (1UL << SW1_PIN)){
   		EXTI->PR1 = (1UL << SW1_PIN); //clear flag
 
+  		counter = counter + 1;
+  		if (counter == 5) {
+  			counter = 0;
+  		}
+  		GPIOC->ODR &= ~(0b11111<<5);
+  		GPIOC->ODR |= 0b111110<<counter;
+
+  		/* Include the following
+  		 * - Change enable value for the fan
+  		 * -
+  		 *
+  		 * */
 
   		// increment a variable counter
-
-  		turn_on_LED();
 	}
 
 	// debouncing block
 	NVIC_DisableIRQ(EXTI2_IRQn);
-	for (int i = 0; 200000 > i;i++); // delay for debouncing, 415.5ms
+	for (int i = 0; 80000 > i;i++); // delay for debouncing, 415.5ms
 	EXTI->PR1 |= 1<<2;
 	NVIC_EnableIRQ(EXTI2_IRQn);
 }
@@ -77,13 +89,24 @@ void EXTI2_IRQHandler(void) {
 void EXTI3_IRQHandler(void) {
 	if (EXTI->PR1 & (1UL << SW2_PIN)){
 		EXTI->PR1 = (1UL << SW2_PIN); //clear flag
+		/*
+		// mode for temp-sense
+		if (mode == 0) {
+			NVIC_DisableIRQ(EXTI2_IRQn);
+		}
 
-		turn_off_LED();
+		// mode for button sense
+		if (mode == 1) {
+			NVIC_EnableIRQ(EXTI2_IRQn);
+		}
+		*/
+
+
 	}
 
 	// debouncing block
 	NVIC_DisableIRQ(EXTI3_IRQn);
-	for (int i = 0; 200000 > i;i++);// delay for debouncing, 415.5ms
+	for (int i = 0; 80000 > i;i++);// delay for debouncing, 415.5ms
 	EXTI->PR1 |= 1<<3;
 	NVIC_EnableIRQ(EXTI3_IRQn);
 }
