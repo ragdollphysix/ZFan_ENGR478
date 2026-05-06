@@ -34,6 +34,8 @@ int main(void){
 	//4. configure interrupts
 	configure_EXTI();
 
+	GPIOC->ODR |= 1<<5;
+
 	//3. Invoke SysTick_Init() to set up SysTick periodic exception.
 		//   The default processor clock is 4MHz provided by MSI.
 		//   The SysTick reload value is set to 4,000,000 - 1 to generate periodic exception every 1 s
