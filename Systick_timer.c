@@ -30,10 +30,25 @@ void SysTick_Init(uint32_t Reload){
 	SysTick->CTRL |= SysTick_CTRL_ENABLE_Msk;  
 }
 
+void Motor_pin_init(){
+  // 1. Enable the clock to GPIO Port B
+  RCC->AHB2ENR |= RCC_AHB2ENR_GPIOBEN;
+		
+	// 2. Configure GPIO Mode to 'Output': Input(00), Output(01), AlterFunc(10), Analog(11)
+	GPIOC->MODER &= ~(0b1111111111<<(2*LED_PIN));
+	GPIOC->MODER |=   0b0101010101<<(2*LED_PIN);      // Output(01)
+
+	// 3. Configure GPIO Output Type to 'Push-Pull': Output push-pull (0), Output open drain (1) 
+	GPIOC->OTYPER &= ~(0b11111<<MOTOR_PIN);      // Push-pull
+	
+	// 4. Configure GPIO Push-Pull to 'No Pull-up or Pull-down': No pull-up, pull-down (00), Pull-up (01), Pull-down (10), Reserved (11)
+	GPIOC->PUPDR  &= ~(0b1111111111<<(2*MOTOR_PIN));  // No pull-up, no pull-down
+}
+}
+
 //-------------------------------------------------------------------------------------------
 // SysTick Exception Handler
 //-------------------------------------------------------------------------------------------
-
 
 void SysTick_Handler(void){
 	pwm_count++;
