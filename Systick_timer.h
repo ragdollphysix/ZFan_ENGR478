@@ -9,6 +9,8 @@ void SysTick_Init(uint32_t Reload);
 // SysTick Exception Handler
 void SysTick_Handler(void);
 
+void Motor_pin_init();
+
 volatile uint32_t pwm_count;
 volatile uint32_t duty_cycle = 50;
 const MOTOR_PIN = 4;
