@@ -9,12 +9,8 @@
 #include "LED.h"
 #include "Systick_timer.h"
 
-//counter%5 = 1
-
-volatile unsigned long counter = 0;
-
 void configure_Push_Button_pin(){
-	// Enable PC2 and PC3 PC2 must be positive logic other can be negative
+	// Enable PC2 and PC3
 		RCC->AHB2ENR |= 0x4;
 
 		// Configured to input (00)
@@ -49,7 +45,7 @@ void configure_EXTI(void){
 	EXTI->PR1 = (1UL << SW1_PIN) | (1UL << SW2_PIN);
 
 	NVIC_EnableIRQ(EXTI2_IRQn);
-	NVIC_EnableIRQ(EXTI3_IRQn);
+	//NVIC_EnableIRQ(EXTI3_IRQn);
 
 }
 
@@ -63,11 +59,7 @@ void EXTI2_IRQHandler(void) {
   		EXTI->PR1 = (1UL << SW1_PIN); //clear flag
 
   		counter = counter + 1;
-  		if (counter == 5) {
-  			counter = 0;
-  		}
-  		GPIOC->ODR &= ~(0b11111<<5);
-  		GPIOC->ODR |= 0b111110<<counter;
+  		rotary_shift();
 
   		/* Include the following
   		 * - Change enable value for the fan
@@ -80,33 +72,31 @@ void EXTI2_IRQHandler(void) {
 
 	// debouncing block
 	NVIC_DisableIRQ(EXTI2_IRQn);
-	for (int i = 0; 80000 > i;i++); // delay for debouncing, 415.5ms
+	for (int i = 0; 68500 > i;i++); // delay for debouncing, 415.5ms
 	EXTI->PR1 |= 1<<2;
 	NVIC_EnableIRQ(EXTI2_IRQn);
 }
 
 // Button for mode change
+/*
 void EXTI3_IRQHandler(void) {
 	if (EXTI->PR1 & (1UL << SW2_PIN)){
 		EXTI->PR1 = (1UL << SW2_PIN); //clear flag
-		/*
-		// mode for temp-sense
-		if (mode == 0) {
-			NVIC_DisableIRQ(EXTI2_IRQn);
-		}
 
-		// mode for button sense
-		if (mode == 1) {
-			NVIC_EnableIRQ(EXTI2_IRQn);
-		}
-		*/
+		// rising edge trigger
+		// if held for three seconds without a detected falling edge, then shut down
 
+		// if not, then check state of mode, then transition accordingly.
+
+		SysTick_Init(4000000);
 
 	}
-
 	// debouncing block
 	NVIC_DisableIRQ(EXTI3_IRQn);
 	for (int i = 0; 80000 > i;i++);// delay for debouncing, 415.5ms
 	EXTI->PR1 |= 1<<3;
 	NVIC_EnableIRQ(EXTI3_IRQn);
+
+
 }
+*/
