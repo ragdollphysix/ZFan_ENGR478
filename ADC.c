@@ -1,4 +1,5 @@
 #include "ADC.h"
+#include "LED.h"
 #include "stm32l476xx.h"
 #include <stdint.h>
 
@@ -183,26 +184,27 @@ void ADC1_2_IRQHandler(void){
 		if (adc_temperature < 70) {
 			GPIOC->ODR &= ~(0b11111 << 5);
 			GPIOC->ODR |= (1 << 5);
+			duty_cycle = 50;
 		}
 		else if (adc_temperature < 75){
 			GPIOC->ODR &= ~(0b11111 << 5);
 			GPIOC->ODR |= (3 << 5);
+			duty_cycle = 35;
 		}
 		else if (adc_temperature < 80){
 			GPIOC->ODR &= ~(0b11111 << 5);
 			GPIOC->ODR |= (7 << 5);
+			duty_cycle = 25;
 		}
 		else if (adc_temperature < 80){
 			GPIOC->ODR &= ~(0b11111 << 5);
 			GPIOC->ODR |= (15 << 5);
-		}
-		else if (adc_temperature < 85){
-			GPIOC->ODR &= ~(0b11111 << 5);
-			GPIOC->ODR |= (31 << 5);
+			duty_cycle = 15;
 		}
 		else {
 			GPIOC->ODR &= ~(0b11111 << 5);
-			GPIOC->ODR |= (63 << 5);
+			GPIOC->ODR |= (31 << 5);
+			duty_cycle = 0;
 		}
 	}
 
