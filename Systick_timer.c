@@ -44,7 +44,6 @@ void Motor_pin_init(){
 	// 4. Configure GPIO Push-Pull to 'No Pull-up or Pull-down': No pull-up, pull-down (00), Pull-up (01), Pull-down (10), Reserved (11)
 	GPIOC->PUPDR  &= ~(0b1111111111<<(2*MOTOR_PIN));  // No pull-up, no pull-down
 }
-}
 
 //-------------------------------------------------------------------------------------------
 // SysTick Exception Handler
