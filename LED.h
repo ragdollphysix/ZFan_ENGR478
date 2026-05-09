@@ -4,6 +4,8 @@
 #include "stm32l476xx.h"
 
 
+extern volatile unsigned long counter; // global variable counter
+
 // Modular function to initialize PA5 as an output pin, interfacing with the LD2 LED.
 void configure_LED_pin();
 
@@ -15,5 +17,7 @@ void turn_off_LED();
 
 // Modular function to toggle the LD2 LED.
 void toggle_LED();
+
+void rotary_counter();
 
 #endif /* __STM32L476G_LED_H */
