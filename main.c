@@ -36,15 +36,21 @@ int main(void){
 
 	//4. configure interrupts
 	configure_EXTI();
+	
+	turn_on_LED();
 
 	// system starts on manual mode and not temperature mode
 	GPIOC->ODR |= 1<<5;
 
+	Motor_pin_init();
+	
+	SysTick_Init(400);
 
-	mode = 1;
+	mode = 0;
 
  	while(1){
- 		if (mode = 1) {
+ 		if (mode == 1) {
+ 			turn_on_LED();
  			NVIC_DisableIRQ(EXTI2_IRQn);
  			// enable the temperature interrupt
  		}
