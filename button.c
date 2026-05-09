@@ -7,6 +7,8 @@
 
 #include "button.h"
 #include "LED.h"
+#include "Systick_timer.h"
+
 
 
 
@@ -67,6 +69,21 @@ void EXTI2_IRQHandler(void) {
 
   			counter = counter + 1;
   			rotary_shift();
+  			if (counter == 0) {
+  				duty_cycle = 50;
+  			}
+  			else if (counter == 1) {
+  				duty_cycle = 35;
+  			}
+  			else if (counter == 2) {
+  				duty_cycle = 25;
+  			}
+  			else if (counter == 3) {
+  				duty_cycle = 15;
+  			}
+  			else if (counter == 4) {
+  				duty_cycle = 0;
+  			}
 
 
 
