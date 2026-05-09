@@ -7,7 +7,9 @@
 
 #include "button.h"
 #include "LED.h"
-#include "Systick_timer.h"
+
+
+
 
 void configure_Push_Button_pin(){
 	// Enable PC2 and PC3
@@ -56,25 +58,26 @@ void configure_EXTI(void){
 // Button for manual mode, speed change
 void EXTI2_IRQHandler(void) {
 	if (EXTI->PR1 & (1UL << SW1_PIN)){
-  		EXTI->PR1 = (1UL << SW1_PIN); //clear flag
+  		//EXTI->PR1 = (1UL << SW1_PIN); //clear flag
+		NVIC_DisableIRQ(EXTI2_IRQn);
+		for (int i = 0; 68500 > i;i++); // delay for debouncing, 415.5ms
+		EXTI->PR1 |= 1<<2;
+		NVIC_EnableIRQ(EXTI2_IRQn);
 
-  		counter = counter + 1;
-  		rotary_shift();
 
-  		/* Include the following
-  		 * - Change enable value for the fan
-  		 * -
-  		 *
-  		 * */
+  			counter = counter + 1;
+  			rotary_shift();
 
-  		// increment a variable counter
+
+
+
 	}
 
 	// debouncing block
-	NVIC_DisableIRQ(EXTI2_IRQn);
-	for (int i = 0; 68500 > i;i++); // delay for debouncing, 415.5ms
-	EXTI->PR1 |= 1<<2;
-	NVIC_EnableIRQ(EXTI2_IRQn);
+//	NVIC_DisableIRQ(EXTI2_IRQn);
+//	for (int i = 0; 68500 > i;i++); // delay for debouncing, 415.5ms
+//	EXTI->PR1 |= 1<<2;
+//	NVIC_EnableIRQ(EXTI2_IRQn);
 }
 
 // Button for mode change
