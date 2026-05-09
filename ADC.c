@@ -196,7 +196,7 @@ void ADC1_2_IRQHandler(void){
 			GPIOC->ODR |= (7 << 5);
 			duty_cycle = 25;
 		}
-		else if (adc_temperature < 80){
+		else if (adc_temperature < 85){
 			GPIOC->ODR &= ~(0b11111 << 5);
 			GPIOC->ODR |= (15 << 5);
 			duty_cycle = 15;
