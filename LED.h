@@ -18,6 +18,6 @@ void turn_off_LED();
 // Modular function to toggle the LD2 LED.
 void toggle_LED();
 
-void rotary_counter();
+void rotary_shift();
 
 #endif /* __STM32L476G_LED_H */
