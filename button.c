@@ -9,7 +9,7 @@
 #include "LED.h"
 #include "Systick_timer.h"
 
-
+extern volatile uint32_t duty_cycle;
 
 
 
