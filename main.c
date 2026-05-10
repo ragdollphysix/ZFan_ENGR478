@@ -36,24 +36,50 @@ int main(void){
 
 	//4. configure interrupts
 	configure_EXTI();
-	
+
 	turn_on_LED();
 
 	// system starts on manual mode and not temperature mode
 	GPIOC->ODR |= 1<<5;
 
 	Motor_pin_init();
-	
+
 	SysTick_Init(400);
 
 	mode = 0;
 
  	while(1){
- 		if (mode == 1) {
- 			turn_on_LED();
- 			NVIC_DisableIRQ(EXTI2_IRQn);
- 			// enable the temperature interrupt
- 		}
 
+ 		if ((GPIOC->IDR & (1UL<<3)) == 1<<3) {
+ 			for(volatile int i=0; i<50000;i++);
+ 			while((GPIOC->IDR & (1UL<<3)) == 1<<3);
+
+ 			for (int t=0; t<200000;t++) {
+ 				if ((GPIOC->IDR & (1UL<<3)) == 1<<3) {
+ 					for(volatile int i=0; i<50000;i++);
+ 					while((GPIOC->IDR & (1UL<<3)) == 1<<3);
+ 					if ((GPIOC->ODR & 1<<5) == 1<<5) {
+ 						GPIOC->ODR &= ~(0b11111<<5);
+ 						NVIC_DisableIRQ(EXTI2_IRQn);
+ 						// code to disable the interrupt for ADC and Systick
+
+ 					} else {
+ 					 	GPIOC->ODR |= 1<<5;
+ 					 	NVIC_EnableIRQ(EXTI2_IRQn);
+ 					 	counter = 0;
+ 					 	// code to enable the interrupt for ADC and Systick
+
+ 					}
+ 					break;
+ 				}
+ 			}
+ 			// insert code here for mode change
+
+ 			// change to temperature mode
+
+
+ 			// change to manual mode
+
+ 		}
  	}
 }
