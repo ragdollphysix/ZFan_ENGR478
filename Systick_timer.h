@@ -11,8 +11,8 @@ void SysTick_Handler(void);
 
 void Motor_pin_init();
 
-volatile uint32_t pwm_count;
-volatile uint32_t duty_cycle = 50;
+extern volatile uint32_t pwm_count;
+extern volatile uint32_t duty_cycle;
 #define MOTOR_PIN 4
 
 #endif /* __STM32L476G_SYSTICK_H */
