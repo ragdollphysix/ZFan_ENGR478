@@ -5,6 +5,7 @@
 
 volatile uint32_t adc_result = 0; //Definition of global variable 'adc_result' declared in "ADC.h"
 volatile float adc_temperature = -50;
+extern volatile uint32_t duty_cycle;
 
 //-------------------------------------------------------------------------------------------
 // ADC1 Wakeup
