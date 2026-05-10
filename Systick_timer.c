@@ -2,6 +2,7 @@
 #include "Systick_timer.h"
 
 volatile uint32_t pwm_count = 0;
+volatile uint32_t duty_cycle = 50;
 
 //-------------------------------------------------------------------------------------------
 // Initialize SysTick	
