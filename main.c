@@ -11,7 +11,7 @@
 #include "button.h"
 #include "ADC.h"
 
-volatile int mode;
+volatile signed int mode;
 
 
 /* One Motor Driver to Motor
@@ -37,8 +37,6 @@ int main(void){
 	//4. configure interrupts
 	configure_EXTI();
 
-	turn_on_LED();
-
 	ADC_Init();
 
 	// system starts on manual mode and not temperature mode
@@ -51,7 +49,8 @@ int main(void){
 	mode = 0b0;
 
  	while(1){
- 		if (mode == 0b1) {
+
+ 		if (mode == -1) {
  			// Temperature Sensing mode
  			NVIC_EnableIRQ(ADC1_2_IRQn);
  			NVIC_DisableIRQ(EXTI2_IRQn);
@@ -63,6 +62,7 @@ int main(void){
  			NVIC_EnableIRQ(EXTI2_IRQn);
  			GPIOC->ODR |= 1<<10;
  		}
+
 
  		if ((GPIOC->IDR & (1UL<<3)) == 1<<3) {
  			for(volatile int i=0; i<50000;i++);
