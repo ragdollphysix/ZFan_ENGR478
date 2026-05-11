@@ -39,6 +39,8 @@ int main(void){
 
 	turn_on_LED();
 
+	ADC_Init();
+
 	// system starts on manual mode and not temperature mode
 	GPIOC->ODR |= 1<<5;
 
@@ -46,15 +48,27 @@ int main(void){
 
 	SysTick_Init(400);
 
-	mode = 0;
+	mode = 0b0;
 
  	while(1){
+ 		if (mode == 0b1) {
+ 			// Temperature Sensing mode
+ 			NVIC_EnableIRQ(ADC1_2_IRQn);
+ 			NVIC_DisableIRQ(EXTI2_IRQn);
+ 			GPIOC->ODR &= ~(1<<10);
+ 		}
+ 		if (mode == 0b0) {
+ 			// manual mode
+ 			NVIC_DisableIRQ(ADC1_2_IRQn);
+ 			NVIC_EnableIRQ(EXTI2_IRQn);
+ 			GPIOC->ODR |= 1<<10;
+ 		}
 
  		if ((GPIOC->IDR & (1UL<<3)) == 1<<3) {
  			for(volatile int i=0; i<50000;i++);
  			while((GPIOC->IDR & (1UL<<3)) == 1<<3);
 
- 			for (int t=0; t<200000;t++) {
+ 			for (int t=0; t<100000;t++) {
 
  				if ((GPIOC->IDR & (1UL<<3)) == 1<<3) {
  					for(volatile int i=0; i<50000;i++);
@@ -63,10 +77,11 @@ int main(void){
  					if ((GPIOC->ODR & 1<<5) == 1<<5) {
  						GPIOC->ODR &= ~(0b11111<<5);
  						NVIC_DisableIRQ(EXTI2_IRQn);
- 						// code to disable the interrupt for ADC and Systick
+ 						NVIC_DisableIRQ(ADC1_2_IRQn);
 
  					} else {
  						NVIC_EnableIRQ(EXTI2_IRQn);
+ 						NVIC_DisableIRQ(ADC1_2_IRQn);
  						counter = 0;
  					 	mask_shift();
  					 	// code to enable the interrupt for ADC and Systick
@@ -75,22 +90,7 @@ int main(void){
  					break;
  				}
  			}
- 			/*
- 			if (mode == 0) {
- 				counter = 0;
- 				rotary_shift();
-
- 			}
- 			*/
-
-
-
- 			// insert code here for mode change
-
- 			// change to temperature mode
-
-
- 			// change to manual mode
+ 			mode = ~(mode);
 
  		}
  	}

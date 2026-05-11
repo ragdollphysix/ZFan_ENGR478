@@ -21,7 +21,7 @@ void configure_LED_pin(){
 	GPIOC->PUPDR  &= ~(0b111111111111<<(2*LED_PIN));  // No pull-up, no pull-down
 }
 
-void rotary_shift(){
+void mask_shift(){
 	if (counter == 5) {
 	  	counter = 0;
 	}
@@ -44,5 +44,5 @@ void turn_off_LED(){
 
 // Modular function to toggle the LD2 LED.
 void toggle_LED(){
-	GPIOC->ODR ^= (1 << LED_PIN);
+	GPIOC->ODR ^= (1 << 10);
 }

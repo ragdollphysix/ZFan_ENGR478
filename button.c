@@ -68,7 +68,7 @@ void EXTI2_IRQHandler(void) {
 
 
   			counter = counter + 1;
-  			rotary_shift();
+  			mask_shift();
   			if (counter == 0) {
   				duty_cycle = 50;
   			}
@@ -82,11 +82,8 @@ void EXTI2_IRQHandler(void) {
   				duty_cycle = 15;
   			}
   			else if (counter == 4) {
-  				duty_cycle = 0;
+  				duty_cycle = 1;
   			}
-
-
-
 
 	}
 
