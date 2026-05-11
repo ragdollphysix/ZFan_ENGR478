@@ -78,6 +78,7 @@ int main(void){
  						GPIOC->ODR &= ~(0b11111<<5);
  						NVIC_DisableIRQ(EXTI2_IRQn);
  						NVIC_DisableIRQ(ADC1_2_IRQn);
+ 						duty_cycle = 0;
 
  					} else {
  						NVIC_EnableIRQ(EXTI2_IRQn);
@@ -90,8 +91,9 @@ int main(void){
  					break;
  				}
  			}
- 			mode = ~(mode);
-
+ 			if ((GPIOC->IDR & 1<<5) == 1<<5) {
+ 				mode = ~(mode);
+ 			}
  		}
  	}
 }
