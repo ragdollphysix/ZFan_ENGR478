@@ -55,24 +55,36 @@ int main(void){
  			while((GPIOC->IDR & (1UL<<3)) == 1<<3);
 
  			for (int t=0; t<200000;t++) {
+
  				if ((GPIOC->IDR & (1UL<<3)) == 1<<3) {
  					for(volatile int i=0; i<50000;i++);
  					while((GPIOC->IDR & (1UL<<3)) == 1<<3);
+
  					if ((GPIOC->ODR & 1<<5) == 1<<5) {
  						GPIOC->ODR &= ~(0b11111<<5);
  						NVIC_DisableIRQ(EXTI2_IRQn);
  						// code to disable the interrupt for ADC and Systick
 
  					} else {
- 					 	GPIOC->ODR |= 1<<5;
- 					 	NVIC_EnableIRQ(EXTI2_IRQn);
- 					 	counter = 0;
+ 						NVIC_EnableIRQ(EXTI2_IRQn);
+ 						counter = 0;
+ 					 	mask_shift();
  					 	// code to enable the interrupt for ADC and Systick
 
  					}
  					break;
  				}
  			}
+ 			/*
+ 			if (mode == 0) {
+ 				counter = 0;
+ 				rotary_shift();
+
+ 			}
+ 			*/
+
+
+
  			// insert code here for mode change
 
  			// change to temperature mode
