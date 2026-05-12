@@ -184,9 +184,9 @@ void ADC1_2_IRQHandler(void){
 	NVIC_DisableIRQ(ADC1_2_IRQn);
 
 }
-
+/*
 uint32_t Sample_once(void) {
-	ADC1->ISR = ADC_ISR_EOC;
+	ADC1->ISR |= ADC_ISR_EOC;
 	ADC1->CR |= ADC_CR_ADSTART;
 
 
@@ -195,3 +195,4 @@ uint32_t Sample_once(void) {
 	}
 	return (uint32_t)ADC1->DR;
 }
+*/
