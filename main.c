@@ -92,37 +92,40 @@ int main(void){
 
  					}
  					*/
+ 					ADC1->ISR |= ADC_ISR_EOC;
+ 					ADC1->CR |= ADC_CR_ADSTART;
+ 					while ((ADC1->ISR & ADC_ISR_EOC) == 0);
+ 					adc_result = ADC1->DR;
 
- 							// Read the sampled data from ADC1_DR and store it in the global variable 'adc_result'
- 							adc_result = Sample_once();
- 							adc_temperature = ((adc_result * 0.4640 - 500) / 10) * 1.8 + 32;
+ 					adc_temperature = ((adc_result * 0.4640 - 500) / 10) * 1.8 + 32;
 
-
+ 					/*
  					if (adc_temperature <= 70) {
- 					 					 					GPIOC->ODR &= ~(0b11111 << 5);
- 					 					 					GPIOC->ODR |= (1 << 5);
- 					 					 					duty_cycle = 20;
- 					 					 				}
- 					 					 				else if (adc_temperature < 75){
- 					 					 					GPIOC->ODR &= ~(0b11111 << 5);
- 					 					 					GPIOC->ODR |= (3 << 5);
- 					 					 					duty_cycle = 40;
- 					 					 				}
- 					 					 				else if (adc_temperature < 80){
- 					 					 					GPIOC->ODR &= ~(0b11111 << 5);
- 					 					 					GPIOC->ODR |= (7 << 5);
- 					 					 					duty_cycle = 60;
- 					 					 				}
- 					 					 				else if (adc_temperature < 85){
- 					 					 					GPIOC->ODR &= ~(0b11111 << 5);
- 					 					 					GPIOC->ODR |= (15 << 5);
- 					 					 					duty_cycle = 80;
- 					 					 				}
- 					 					 				else {
- 					 					 					GPIOC->ODR &= ~(0b11111 << 5);
- 					 					 					GPIOC->ODR |= (31 << 5);
- 					 					 					duty_cycle = 100;
- 					 					 				}
+						GPIOC->ODR &= ~(0b11111 << 5);
+																	GPIOC->ODR |= (1 << 5);
+																	duty_cycle = 20;
+																}
+																else if (adc_temperature < 75){
+																	GPIOC->ODR &= ~(0b11111 << 5);
+																	GPIOC->ODR |= (3 << 5);
+																	duty_cycle = 40;
+																}
+																else if (adc_temperature < 80){
+																	GPIOC->ODR &= ~(0b11111 << 5);
+																	GPIOC->ODR |= (7 << 5);
+																	duty_cycle = 60;
+																}
+																else if (adc_temperature < 85){
+																	GPIOC->ODR &= ~(0b11111 << 5);
+																	GPIOC->ODR |= (15 << 5);
+																	duty_cycle = 80;
+																}
+																else {
+																	GPIOC->ODR &= ~(0b11111 << 5);
+																	GPIOC->ODR |= (31 << 5);
+																	duty_cycle = 100;
+																}
+ 					 					 				*/
 
  					break;
  				}
