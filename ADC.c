@@ -177,37 +177,21 @@ void ADC1_2_IRQHandler(void){
 	// Check if the interrupt is triggered by ADC1 End of Conversion (EOC)
 	if ((ADC1->ISR & ADC_ISR_EOC) == ADC_ISR_EOC) {
 
-		// Clear the interrupt by writing 1 to it or by reading the corresponding ADC1_DR register
-		ADC1->ISR |= ADC_ISR_EOC;
-		// Read the sampled data from ADC1_DR and store it in the global variable 'adc_result'
-		adc_result = ADC1->DR;
-		adc_temperature = ((adc_result * 0.4640 - 500) / 10) * 1.8 + 32;
 
-		if (adc_temperature < 70) {
-			GPIOC->ODR &= ~(0b11111 << 5);
-			GPIOC->ODR |= (1 << 5);
-			duty_cycle = 50;
-		}
-		else if (adc_temperature < 75){
-			GPIOC->ODR &= ~(0b11111 << 5);
-			GPIOC->ODR |= (3 << 5);
-			duty_cycle = 35;
-		}
-		else if (adc_temperature < 80){
-			GPIOC->ODR &= ~(0b11111 << 5);
-			GPIOC->ODR |= (7 << 5);
-			duty_cycle = 25;
-		}
-		else if (adc_temperature < 80){
-			GPIOC->ODR &= ~(0b11111 << 5);
-			GPIOC->ODR |= (15 << 5);
-			duty_cycle = 15;
-		}
-		else {
-			GPIOC->ODR &= ~(0b11111 << 5);
-			GPIOC->ODR |= (31 << 5);
-			duty_cycle = 0;
-		}
+
+
 	}
+	NVIC_DisableIRQ(ADC1_2_IRQn);
 
+}
+
+uint32_t Sample_once(void) {
+	ADC1->ISR = ADC_ISR_EOC;
+	ADC1->CR |= ADC_CR_ADSTART;
+
+
+	while ((ADC1->ISR & ADC_ISR_EOC) == 0) {
+
+	}
+	return (uint32_t)ADC1->DR;
 }
