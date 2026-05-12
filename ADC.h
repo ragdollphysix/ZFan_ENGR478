@@ -27,7 +27,7 @@ void ADC_Common_Configuration(void);
 // Modular function to initialize ADC
 void ADC_Init(void);
 
-uint32_t Sample_once(void);
+//uint32_t Sample_once(void);
 
 
 #endif /* ADC_H_ */
