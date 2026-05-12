@@ -1,13 +1,20 @@
-#ifndef __STM32L476G_ADC_H
-#define __STM32L476G_ADC_H
+/*
+ * ADC.h
+ *
+ *  Created on: May 7, 2026
+ *      Author: ragdo
+ */
+
+#ifndef ADC_H_
+#define ADC_H_
 
 #include "stm32l476xx.h"
 
 
-extern volatile uint32_t adc_result; //Declaration of global variable to store sampled ADC data 
+extern volatile uint32_t adc_result; //Declaration of global variable to store sampled ADC data
 extern volatile float adc_temperature;
 
-// Modular function to wake up ADC1 from the deep-power-down mode 
+// Modular function to wake up ADC1 from the deep-power-down mode
 void ADC1_Wakeup (void);
 
 // Modular function to initialize ADC external input channels
@@ -20,6 +27,7 @@ void ADC_Common_Configuration(void);
 // Modular function to initialize ADC
 void ADC_Init(void);
 
+uint32_t Sample_once(void);
 
 
-#endif /* __STM32L476G_ADC_H */
+#endif /* ADC_H_ */
