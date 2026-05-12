@@ -37,8 +37,6 @@ int main(void){
 	//4. configure interrupts
 	configure_EXTI();
 
-	ADC_Init();
-
 	// system starts on manual mode and not temperature mode
 	GPIOC->ODR |= 1<<5;
 
@@ -48,11 +46,15 @@ int main(void){
 
 	mode = 0b0;
 
+	ADC_Init();
+
+	NVIC_DisableIRQ(EXTI2_IRQn);
+
  	while(1){
 
  		if (mode == -1) {
  			// Temperature Sensing mode
- 			NVIC_EnableIRQ(ADC1_2_IRQn);
+
  			NVIC_DisableIRQ(EXTI2_IRQn);
  			GPIOC->ODR &= ~(1<<10);
  		}
@@ -74,6 +76,7 @@ int main(void){
  					for(volatile int i=0; i<50000;i++);
  					while((GPIOC->IDR & (1UL<<3)) == 1<<3);
 
+ 					/*
  					if ((GPIOC->ODR & 1<<5) == 1<<5) {
  						GPIOC->ODR &= ~(0b11111<<5);
  						NVIC_DisableIRQ(EXTI2_IRQn);
@@ -88,6 +91,39 @@ int main(void){
  					 	// code to enable the interrupt for ADC and Systick
 
  					}
+ 					*/
+
+ 							// Read the sampled data from ADC1_DR and store it in the global variable 'adc_result'
+ 							adc_result = Sample_once();
+ 							adc_temperature = ((adc_result * 0.4640 - 500) / 10) * 1.8 + 32;
+
+
+ 					if (adc_temperature <= 70) {
+ 					 					 					GPIOC->ODR &= ~(0b11111 << 5);
+ 					 					 					GPIOC->ODR |= (1 << 5);
+ 					 					 					duty_cycle = 20;
+ 					 					 				}
+ 					 					 				else if (adc_temperature < 75){
+ 					 					 					GPIOC->ODR &= ~(0b11111 << 5);
+ 					 					 					GPIOC->ODR |= (3 << 5);
+ 					 					 					duty_cycle = 40;
+ 					 					 				}
+ 					 					 				else if (adc_temperature < 80){
+ 					 					 					GPIOC->ODR &= ~(0b11111 << 5);
+ 					 					 					GPIOC->ODR |= (7 << 5);
+ 					 					 					duty_cycle = 60;
+ 					 					 				}
+ 					 					 				else if (adc_temperature < 85){
+ 					 					 					GPIOC->ODR &= ~(0b11111 << 5);
+ 					 					 					GPIOC->ODR |= (15 << 5);
+ 					 					 					duty_cycle = 80;
+ 					 					 				}
+ 					 					 				else {
+ 					 					 					GPIOC->ODR &= ~(0b11111 << 5);
+ 					 					 					GPIOC->ODR |= (31 << 5);
+ 					 					 					duty_cycle = 100;
+ 					 					 				}
+
  					break;
  				}
  			}
